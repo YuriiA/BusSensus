@@ -1,44 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Paper,
   FormGroup,
   FormControl,
   Select,
-  //   Autocomplete,
   TextField,
-  //   InputLabel,
   MenuItem,
   Button,
 } from "@mui/material";
 import { dateBuilder } from "../utils/utils";
+import shortid from "shortid";
 
 export default function FeedbackForm() {
-  const [bus, setBus] = useState([
-    {
-      busNumber: ["1", "2", "3"],
-      busRoute: ["one", "two", "three"],
-      station: ["Calea Bucuresti", "Grivitei", "13 Decembrie"],
-      noOfPassengers: "",
-    },
-  ]);
+  const [busNumber, setBusNumber] = useState([""]);
+  const [busNoToSend, setBusNoToSend] = useState([]);
 
-  function handleChange(e) {
-    setBus({ ...bus, [e.target.name]: e.target.value });
-  }
+  const [busRoute, setBusRoute] = useState([""]);
+  const [busRouteToSend, setBusRouteToSend] = useState([]);
+
+  const [station, setStation] = useState([""]);
+  const [stationToSend, setStationToSend] = useState([]);
+
+  const [numOfPassengers, setNumOfPassengers] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
     const time = dateBuilder(new Date());
-    const sentForm = { ...bus, time };
+    setNumOfPassengers("");
+    const userId = shortid.generate();
 
     console.log(
-      bus.busNumber,
-      bus.busRoute,
-      bus.station,
-      bus.noOfPassengers,
-      sentForm
+      busNoToSend,
+      busRouteToSend,
+      stationToSend,
+      numOfPassengers,
+      time,
+      `user id: ${userId}`
     );
   }
+  useEffect(() => {
+    fetch(" https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((data) => {
+        setBusNumber(
+          data.map((item) => {
+            return item.id;
+          })
+        );
+        setBusRoute(
+          data.map((item) => {
+            return item.username;
+          })
+        );
+
+        setStation(
+          data.map((item) => {
+            return item.address.street;
+          })
+        );
+      });
+  }, []);
 
   return (
     <div>
@@ -48,12 +69,16 @@ export default function FeedbackForm() {
             <h4> Bus Number</h4>
             <Select
               id="busNumber"
-              value={bus.busNumber || ""}
+              value={busNoToSend || " "}
               name="busNumber"
-              onChange={handleChange}
+              onChange={(e) => setBusNoToSend(e.target.value)}
             >
-              {bus[0].busNumber.map((number) => {
-                return <MenuItem value={number}>{number}</MenuItem>;
+              {busNumber.map((number) => {
+                return (
+                  <MenuItem key={shortid.generate()} value={number}>
+                    {number}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>
@@ -62,12 +87,16 @@ export default function FeedbackForm() {
             <h4> Bus Route</h4>
             <Select
               id="busRoute"
-              value={bus.busRoute || ""}
+              value={busRouteToSend || " "}
               name="busRoute"
-              onChange={handleChange}
+              onChange={(e) => setBusRouteToSend(e.target.value)}
             >
-              {bus[0].busRoute.map((route) => {
-                return <MenuItem value={route}>{route}</MenuItem>;
+              {busRoute.map((route) => {
+                return (
+                  <MenuItem key={shortid.generate()} value={route}>
+                    {route}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>
@@ -76,23 +105,27 @@ export default function FeedbackForm() {
             <h4> Station</h4>
             <Select
               id="station"
-              value={bus.station || ""}
+              value={stationToSend || " "}
               name="station"
-              onChange={handleChange}
+              onChange={(e) => setStationToSend(e.target.value)}
             >
-              {bus[0].station.map((BusStation) => {
-                return <MenuItem value={BusStation}>{BusStation}</MenuItem>;
+              {station.map((BusStation) => {
+                return (
+                  <MenuItem key={shortid.generate()} value={BusStation}>
+                    {BusStation}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>
           <FormControl>
             <h4>No of people in the bus</h4>
             <TextField
-              id="noOfPassengers"
+              id="numOfPassengers"
               type="number"
-              name="noOfPassengers"
-              value={bus.noOfPassengers || ""}
-              onChange={handleChange}
+              name="numOfPassengers"
+              value={numOfPassengers}
+              onChange={(e) => setNumOfPassengers(e.target.value)}
             />
           </FormControl>
           <Button onClick={handleSubmit}>Submit</Button>
