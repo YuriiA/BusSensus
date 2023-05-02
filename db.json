@@ -1,0 +1,15 @@
+{
+  "busNO": [11, 26, 33, 48, 45, 35, 57],
+  "routes": ["A->B", "B->A", "C->D", "D->C", "E->F", "F->E"],
+  "stations": [
+    "Hidro",
+    "Vlahuta",
+    "Onix",
+    "Astra",
+    "Traian",
+    "Gara",
+    "Livada Postei",
+    "Triaj",
+    "13 Decembrie"
+  ]
+}
