@@ -11,5 +11,23 @@
     "Livada Postei",
     "Triaj",
     "13 Decembrie"
+  ],
+  "feedback": [
+    {
+      "busNo": 33,
+      "route": "C->D",
+      "station": "Vlahuta",
+      "numOfPass": "23",
+      "date": "17:13,on 2 May 2023",
+      "id": 1
+    },
+    {
+      "busNo": 45,
+      "route": "E->F",
+      "station": "Livada Postei",
+      "numOfPass": "56",
+      "date": "17:14,on 2 May 2023",
+      "id": 2
+    }
   ]
 }
