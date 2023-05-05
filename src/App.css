@@ -3,3 +3,9 @@
   box-sizing: border-box;
   font-family: "Roboto";
 }
+body {
+  background: url("http://localhost:3000/images/bg-bus.jpeg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

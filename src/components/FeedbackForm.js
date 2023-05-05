@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   FormGroup,
   FormControl,
+  InputLabel,
   Select,
   TextField,
   MenuItem,
@@ -10,8 +11,8 @@ import {
   Box,
   LinearProgress,
 } from "@mui/material";
+import { blue } from "@mui/material/colors";
 import { dateBuilder } from "../utils/utils";
-import shortid from "shortid";
 
 const initialErrors = {
   busNo: "",
@@ -19,6 +20,7 @@ const initialErrors = {
   busStation: "",
   passengers: "",
 };
+const blueColor = blue[50];
 
 export default function FeedbackForm() {
   const [loading, setLoading] = useState(true);
@@ -43,8 +45,7 @@ export default function FeedbackForm() {
     let isValid = true;
     let newErrors = { ...errors };
 
-    debugger;
-    if (busNoToSend === null) {
+    if (!busNoToSend) {
       isValid = false;
       newErrors.busNo = "Bus Number is required";
     }
@@ -141,18 +142,34 @@ export default function FeedbackForm() {
   }
 
   return (
-    <Box sx={{ maxWidth: "800px", p: 2, border: "1px solid grey" }}>
-      <FormGroup>
-        <FormControl variant="filled" error={!!errors.busNo}>
-          <h4> Bus Number</h4>
+    <Box
+      sx={{
+        mt: 10,
+        p: 2,
+        border: "1px solid grey",
+        backgroundColor: "rgba(256, 256, 256, 0.8)",
+      }}
+    >
+      <FormGroup
+        sx={{
+          display: "flex",
+          gap: 3,
+        }}
+      >
+        <FormControl
+          variant="filled"
+          error={!!errors.busNo}
+          sx={{ backgroundColor: blueColor }}
+        >
+          <InputLabel>Bus Number</InputLabel>
           <Select
             value={busNoToSend}
             name="busNoToSend"
             onChange={handleBusNoChange}
           >
-            {busNumbers.map((number) => {
+            {busNumbers.map((number, index) => {
               return (
-                <MenuItem key={shortid.generate()} value={number}>
+                <MenuItem key={index} value={number}>
                   {number}
                 </MenuItem>
               );
@@ -161,17 +178,21 @@ export default function FeedbackForm() {
           {errors.busNo && <FormHelperText> {errors.busNo}</FormHelperText>}
         </FormControl>
 
-        {busNoToSend.length !== 0 && (
-          <FormControl variant="filled" error={!!errors.route}>
-            <h4> Bus Route</h4>
+        {busNoToSend !== null && (
+          <FormControl
+            variant="filled"
+            error={!!errors.route}
+            sx={{ backgroundColor: blueColor }}
+          >
+            <InputLabel>Bus Route</InputLabel>
             <Select
               value={busRouteToSend}
               name="busRouteToSend"
               onChange={handleRouteChange}
             >
-              {busRoute.map((route) => {
+              {busRoute.map((route, index) => {
                 return (
-                  <MenuItem key={shortid.generate()} value={route}>
+                  <MenuItem key={index} value={route}>
                     {route}
                   </MenuItem>
                 );
@@ -182,17 +203,21 @@ export default function FeedbackForm() {
         )}
 
         {busRouteToSend.length !== 0 && (
-          <FormControl variant="filled" error={!!errors.busStation}>
-            <h4> Station</h4>
+          <FormControl
+            variant="filled"
+            error={!!errors.busStation}
+            sx={{ backgroundColor: blueColor }}
+          >
+            <InputLabel> Station</InputLabel>
             <Select
               value={stationToSend}
               name="stationToSend"
               onChange={handleStationsChange}
             >
-              {station.map((BusStation) => {
+              {station.map((busStation, index) => {
                 return (
-                  <MenuItem key={shortid.generate()} value={BusStation}>
-                    {BusStation}
+                  <MenuItem key={index} value={busStation}>
+                    {busStation}
                   </MenuItem>
                 );
               })}
@@ -204,14 +229,16 @@ export default function FeedbackForm() {
         )}
         {stationToSend.length !== 0 && (
           <FormControl variant="filled" error={!!errors.passengers}>
-            <h4>No of people in the bus</h4>
             <TextField
               variant="filled"
               type="number"
+              label="No of passengers"
               name="numOfPassengers"
               value={numOfPassengers}
               onChange={handlePassengersChange}
               error={!!errors.passengers}
+              sx={{ backgroundColor: blueColor }}
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             />
             {errors.passengers && (
               <FormHelperText>{errors.passengers}</FormHelperText>
@@ -220,8 +247,8 @@ export default function FeedbackForm() {
         )}
 
         <Button
-          sx={{ width: "30%", marginTop: 6, marginLeft: "auto" }}
-          variant="outlined"
+          sx={{ minWidth: "50%", marginTop: 6, marginLeft: "auto" }}
+          variant="contained"
           onClick={handleSubmit}
         >
           Submit
