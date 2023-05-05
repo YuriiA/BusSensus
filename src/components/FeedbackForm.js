@@ -8,26 +8,34 @@ import {
   Button,
   FormHelperText,
   Box,
+  LinearProgress,
 } from "@mui/material";
 import { dateBuilder } from "../utils/utils";
 import shortid from "shortid";
 
 export default function FeedbackForm() {
-  const [loading, setLoading] = useState("true");
+  const [loading, setLoading] = useState(true);
 
   const [busNumber, setBusNumber] = useState([]);
-  const [busNoToSend, setBusNoToSend] = useState([]);
-  const [busNumberError, setBusNumberError] = useState([]);
+  const [busNoToSend, setBusNoToSend] = useState("");
+  const [busNumberError, setBusNumberError] = useState("");
 
   const [busRoute, setBusRoute] = useState([]);
-  const [busRouteToSend, setBusRouteToSend] = useState([]);
-  const [busRouteError, setBusRouteError] = useState([]);
+  const [busRouteToSend, setBusRouteToSend] = useState("");
+  const [busRouteError, setBusRouteError] = useState("");
 
   const [station, setStation] = useState([]);
-  const [stationToSend, setStationToSend] = useState([]);
-  const [stationError, setStationError] = useState([]);
+  const [stationToSend, setStationToSend] = useState("");
+  const [stationError, setStationError] = useState("");
 
   const [numOfPassengers, setNumOfPassengers] = useState("");
+
+  const initialErrors = {
+    busNo: "",
+    route: "",
+    busStation: "",
+    passengers: "",
+  };
 
   const [errors, setErrors] = useState({
     busNo: "",
@@ -40,22 +48,22 @@ export default function FeedbackForm() {
     let isValid = true;
     let newErrors = { ...errors };
 
-    if (busNoToSend.length === 0) {
+    if (!busNoToSend.length) {
       isValid = false;
       newErrors.busNo = "Bus Number is required";
     }
 
-    if (busRouteToSend.length === 0) {
+    if (!busRouteToSend.length) {
       isValid = false;
       newErrors.route = "Please select bus route ";
     }
 
-    if (stationToSend.length === 0) {
+    if (!stationToSend.length) {
       isValid = false;
       newErrors.busStation = "Please select the station";
     }
 
-    if (numOfPassengers === "") {
+    if (!numOfPassengers) {
       isValid = false;
       newErrors.passengers = "Please enter the number of passengers";
     }
@@ -76,7 +84,7 @@ export default function FeedbackForm() {
   //Set bus number to send and Fetch Bus Route
   function handleBusNoChange(e) {
     setBusNoToSend(e.target.value);
-    setErrors("");
+    setErrors(initialErrors);
 
     fetch(" http://localhost:3001/routes")
       .then((res) => res.json())
@@ -87,7 +95,8 @@ export default function FeedbackForm() {
   // Set bus route to send and Fetch Stations
   function handleRouteChange(e) {
     setBusRouteToSend(e.target.value);
-    setErrors("");
+    setErrors(initialErrors);
+
     fetch(" http://localhost:3001/stations")
       .then((res) => res.json())
       .then((data) => setStation(data))
@@ -101,13 +110,12 @@ export default function FeedbackForm() {
 
   function handlePassengersChange(e) {
     setNumOfPassengers(e.target.value);
-    setErrors("");
+    setErrors(initialErrors);
   }
 
   console.log(busNumberError, busRouteError, stationError);
 
   function handleSubmit(e) {
-    e.preventDefault();
     const time = dateBuilder(new Date());
 
     if (!isFormValid()) {
@@ -133,16 +141,18 @@ export default function FeedbackForm() {
   }
 
   if (loading) {
-    return "form loading";
+    return <LinearProgress />;
   }
 
   return (
     <Box sx={{ maxWidth: "800px", p: 2, border: "1px solid grey" }}>
       <FormGroup>
-        <FormControl variant="filled" error={errors.busNo ? true : false}>
+        <FormControl variant="filled" error={!!errors.busNo}>
+          {" "}
+          {/* or error={errors.busNo ? true : false}>  */}
           <h4> Bus Number</h4>
           <Select
-            value={busNoToSend || " "}
+            value={busNoToSend}
             name="busNoToSend"
             onChange={handleBusNoChange}
           >
@@ -158,10 +168,12 @@ export default function FeedbackForm() {
         </FormControl>
 
         {busNoToSend.length !== 0 && (
-          <FormControl variant="filled" error={errors.route ? true : false}>
+          <FormControl variant="filled" error={!!errors.route}>
+            {" "}
+            {/* or error={errors.route ? true : false}>  */}
             <h4> Bus Route</h4>
             <Select
-              value={busRouteToSend || " "}
+              value={busRouteToSend}
               name="busRouteToSend"
               onChange={handleRouteChange}
             >
@@ -178,13 +190,10 @@ export default function FeedbackForm() {
         )}
 
         {busRouteToSend.length !== 0 && (
-          <FormControl
-            variant="filled"
-            error={errors.busStation ? true : false}
-          >
+          <FormControl variant="filled" error={!!errors.busStation}>
             <h4> Station</h4>
             <Select
-              value={stationToSend || " "}
+              value={stationToSend}
               name="stationToSend"
               onChange={handleStationsChange}
             >
@@ -202,18 +211,15 @@ export default function FeedbackForm() {
           </FormControl>
         )}
         {stationToSend.length !== 0 && (
-          <FormControl
-            variant="filled"
-            error={errors.passengers ? true : false}
-          >
+          <FormControl variant="filled" error={!!errors.passengers}>
             <h4>No of people in the bus</h4>
             <TextField
               variant="filled"
               type="number"
               name="numOfPassengers"
-              value={numOfPassengers || ""}
+              value={numOfPassengers}
               onChange={handlePassengersChange}
-              error={errors.passengers ? true : false}
+              error={!!errors.passengers}
             />
             {errors.passengers && (
               <FormHelperText>{errors.passengers}</FormHelperText>

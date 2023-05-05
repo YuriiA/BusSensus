@@ -1,6 +1,21 @@
 {
-  "busNO": [11, 26, 33, 48, 45, 35, 57],
-  "routes": ["A->B", "B->A", "C->D", "D->C", "E->F", "F->E"],
+  "busNO": [
+    11,
+    26,
+    33,
+    48,
+    45,
+    35,
+    57
+  ],
+  "routes": [
+    "A->B",
+    "B->A",
+    "C->D",
+    "D->C",
+    "E->F",
+    "F->E"
+  ],
   "stations": [
     "Hidro",
     "Vlahuta",
@@ -28,6 +43,30 @@
       "numOfPass": "56",
       "date": "17:14,on 2 May 2023",
       "id": 2
+    },
+    {
+      "busNo": 33,
+      "route": "B->A",
+      "station": "Astra",
+      "numOfPass": "34",
+      "date": "9:38,on 5 May 2023",
+      "id": 3
+    },
+    {
+      "busNo": 26,
+      "route": "D->C",
+      "station": "Onix",
+      "numOfPass": "23",
+      "date": "9:42,on 5 May 2023",
+      "id": 4
+    },
+    {
+      "busNo": 33,
+      "route": "C->D",
+      "station": "Onix",
+      "numOfPass": "32",
+      "date": "9:45,on 5 May 2023",
+      "id": 5
     }
   ]
 }
