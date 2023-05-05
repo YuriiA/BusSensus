@@ -67,6 +67,14 @@
       "numOfPass": "32",
       "date": "9:45,on 5 May 2023",
       "id": 5
+    },
+    {
+      "busNo": 26,
+      "route": "D->C",
+      "station": "Vlahuta",
+      "numOfPass": "3",
+      "date": "10:42,on 5 May 2023",
+      "id": 6
     }
   ]
 }

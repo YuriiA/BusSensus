@@ -13,11 +13,18 @@ import {
 import { dateBuilder } from "../utils/utils";
 import shortid from "shortid";
 
+const initialErrors = {
+  busNo: "",
+  route: "",
+  busStation: "",
+  passengers: "",
+};
+
 export default function FeedbackForm() {
   const [loading, setLoading] = useState(true);
 
-  const [busNumber, setBusNumber] = useState([]);
-  const [busNoToSend, setBusNoToSend] = useState("");
+  const [busNumbers, setBusNumbers] = useState([]);
+  const [busNoToSend, setBusNoToSend] = useState(null);
   const [busNumberError, setBusNumberError] = useState("");
 
   const [busRoute, setBusRoute] = useState([]);
@@ -30,25 +37,14 @@ export default function FeedbackForm() {
 
   const [numOfPassengers, setNumOfPassengers] = useState("");
 
-  const initialErrors = {
-    busNo: "",
-    route: "",
-    busStation: "",
-    passengers: "",
-  };
-
-  const [errors, setErrors] = useState({
-    busNo: "",
-    route: "",
-    busStation: "",
-    passengers: "",
-  });
+  const [errors, setErrors] = useState(initialErrors);
 
   function isFormValid() {
     let isValid = true;
     let newErrors = { ...errors };
 
-    if (!busNoToSend.length) {
+    debugger;
+    if (busNoToSend === null) {
       isValid = false;
       newErrors.busNo = "Bus Number is required";
     }
@@ -77,7 +73,7 @@ export default function FeedbackForm() {
   useEffect(() => {
     fetch(" http://localhost:3001/busNo")
       .then((res) => res.json())
-      .then((data) => setBusNumber(data), setLoading(false))
+      .then((data) => setBusNumbers(data), setLoading(false))
       .catch((err) => setBusNumberError(err));
   }, []);
 
@@ -148,15 +144,13 @@ export default function FeedbackForm() {
     <Box sx={{ maxWidth: "800px", p: 2, border: "1px solid grey" }}>
       <FormGroup>
         <FormControl variant="filled" error={!!errors.busNo}>
-          {" "}
-          {/* or error={errors.busNo ? true : false}>  */}
           <h4> Bus Number</h4>
           <Select
             value={busNoToSend}
             name="busNoToSend"
             onChange={handleBusNoChange}
           >
-            {busNumber.map((number) => {
+            {busNumbers.map((number) => {
               return (
                 <MenuItem key={shortid.generate()} value={number}>
                   {number}
@@ -169,8 +163,6 @@ export default function FeedbackForm() {
 
         {busNoToSend.length !== 0 && (
           <FormControl variant="filled" error={!!errors.route}>
-            {" "}
-            {/* or error={errors.route ? true : false}>  */}
             <h4> Bus Route</h4>
             <Select
               value={busRouteToSend}
